@@ -3,6 +3,7 @@ package lk.athenaWebServer;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.spec.RSAOtherPrimeInfo;
 import java.time.LocalDateTime;
@@ -99,6 +100,63 @@ public class ServerApp {
                                 """;
                         os.write(content.getBytes());
                         os.flush();
+
+                    }else{
+
+                        if(path.equalsIgnoreCase("/")){
+                            index = Path.of("http", host, "index.html");
+
+                        }else {
+                            index = Path.of("http", host, path);
+                        }
+
+                        if(!Files.exists(index)){
+                            head = """
+                                HTTP/1.1 404 Not Found
+                                Server: Dep Server
+                                Date:%s
+                                Content-Type: text/html
+                                
+                                """.formatted(LocalDateTime.now());
+
+                            os.write(head.getBytes());
+                            os.flush();
+
+                            content = """
+                                <!DOCTYPE html>
+                                <html>
+                                <head>
+                                <title>Dep Server</title>
+                                </head>
+                                <body>
+                                <h1>404 Not Found</h1>
+                                </body>
+                                </html>
+                                """;
+                            os.write(content.getBytes());
+                            os.flush();
+                        }else{
+                            head = """
+                                HTTP/1.1 200 OK
+                                Content-Type: %s
+                                
+                                """.formatted(Files.probeContentType(index));
+                            os.write(head.getBytes());
+                            os.flush();
+
+                            FileInputStream fis = new FileInputStream(index.toFile());
+                            BufferedInputStream bis = new BufferedInputStream(fis);
+
+
+                            byte[] buffer = new byte[1024];
+                            while (bis.read(buffer) != -1) {
+                                os.write(buffer);
+                                os.flush();
+                            }
+                            bis.close();
+
+
+                        }
 
                     }
 
