@@ -30,7 +30,7 @@ public class ServerApp {
                     System.out.println(command + " " + path);
 
                     String line;
-                    String host;
+                    String host=null;
                     while ((line = br.readLine())!= null && !line.isEmpty()){
                         if(line.split(":")[0].strip().equalsIgnoreCase("host")){
                             host = line.split(":")[1];
@@ -73,6 +73,32 @@ public class ServerApp {
                         os.write(content.getBytes());
                         os.flush();
 
+
+                    }else if (host == null) {
+                        head = """
+                                HTTP/1.1 400 Bad Request
+                                Server: Dep Server
+                                Date:%s
+                                Content-Type: text/html
+                                
+                                """.formatted(LocalDateTime.now());
+
+                        os.write(head.getBytes());
+                        os.flush();
+
+                        content = """
+                                <!DOCTYPE html>
+                                <html>
+                                <head>
+                                <title>Dep Server</title>
+                                </head>
+                                <body>
+                                <h1>400 Bad Request</h1>
+                                </body>
+                                </html>
+                                """;
+                        os.write(content.getBytes());
+                        os.flush();
 
                     }
 
