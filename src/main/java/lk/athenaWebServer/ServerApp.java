@@ -1,12 +1,11 @@
 package lk.athenaWebServer;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.file.Path;
 import java.security.spec.RSAOtherPrimeInfo;
+import java.time.LocalDateTime;
 
 public class ServerApp {
     public static void main(String[] args) throws Exception {
@@ -38,6 +37,46 @@ public class ServerApp {
                             System.out.println(host);
                         }
                     }
+
+                    OutputStream os = localsocket.getOutputStream();
+
+                    String head = "";
+                    Path index=null;
+                    String content = "";
+
+
+
+                    if(!command.equalsIgnoreCase("get")){
+                        head = """
+                                HTTP/1.1 405 Method Not Allowed
+                                Server: Dep Server
+                                Date:%s
+                                Content-Type: text/html
+                                
+                                """.formatted(LocalDateTime.now());
+
+                        os.write(head.getBytes());
+                        os.flush();
+
+                        content = """
+                                <!DOCTYPE html>
+                                <html>
+                                <head>
+                                <title>Dep Server</title>
+                                </head>
+                                <body>
+                                <h1>500 Bad Request</h1>
+                                <h6>copyright (c) Athena web Server</h6>
+                                </body>
+                                </html>
+                                """;
+                        os.write(content.getBytes());
+                        os.flush();
+
+
+                    }
+
+
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
