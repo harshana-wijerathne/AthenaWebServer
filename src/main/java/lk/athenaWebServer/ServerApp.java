@@ -34,7 +34,7 @@ public class ServerApp {
                     String host=null;
                     while ((line = br.readLine())!= null && !line.isEmpty()){
                         if(line.split(":")[0].strip().equalsIgnoreCase("host")){
-                            host = line.split(":")[1];
+                            host = line.split(":")[1].strip();
                             System.out.println(host);
                         }
                     }
@@ -95,6 +95,7 @@ public class ServerApp {
                                 </head>
                                 <body>
                                 <h1>400 Bad Request</h1>
+                                <h6>copyright (c) Athena web Server</h6>
                                 </body>
                                 </html>
                                 """;
@@ -129,7 +130,8 @@ public class ServerApp {
                                 <title>Dep Server</title>
                                 </head>
                                 <body>
-                                <h1>404 Not Found</h1>
+                                <h1>404 Not Found index.html</h1>
+                                
                                 </body>
                                 </html>
                                 """;
