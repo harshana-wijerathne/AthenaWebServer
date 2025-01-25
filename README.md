@@ -1,4 +1,4 @@
-# Athena Web lk.ijse.dep13.AthenaWebServer.Server
+# Athena Web Server
 
 This Browser was developed to learn about internal behaviour of a web
 browser and to understand about HTTP protocol
